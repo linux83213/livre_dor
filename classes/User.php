@@ -2,29 +2,29 @@
 
 /**
  * Classe User : Gestion des utilisateurs.
- *
+ *  
  * Cette classe permet :
  * - De récupérer les informations d'un utilisateur via son ID.
- * - De modifier son nom, email et mot de passe de manière sécurisée.
+ * - De modifier son nom, email et mdp de manière sécurisée.
  * - D'obtenir ses informations d'accès et sa date d'inscription.
- */
+ */ 
 class User {
     private static Database $DB; // Instance de la classe Database (statique pour être partagée par toutes les instances)
     private ?DateTime $dateRegistered; // Stocke la date d'inscription de l'utilisateur (nullable)
 
     private int $id;            // ID unique de l'utilisateur dans la base de données
-    private string $username;   // Nom d'utilisateur
-    private string $email;      // Adresse email
+    private string $username;   
+    private string $email;      
     private int $accessLevel;   // Niveau d'accès de l'utilisateur (ex: admin, utilisateur normal, etc.)
 
     private bool $initialized = false; // Indique si l'utilisateur a été correctement initialisé
 
     /**
      * Constructeur : Initialise un objet User en récupérant ses infos via son ID.
-     *
+     *  
      * @param Database $DB Instance de la base de données.
      * @param int $id Identifiant unique de l'utilisateur.
-     */
+    */ 
     public function __construct(Database $DB, int $id) {
         self::$DB = $DB; // Stocke l'instance de la base de données (statique, donc partagée)
 
@@ -43,20 +43,20 @@ class User {
     private function initialize(): void {
         // Récupère les informations de l'utilisateur depuis la base
         if ($results = $this->getUserData()) {
-            $this->username = $results['Username']; // Assigne le nom d'utilisateur
-            $this->email = $results['Email']; // Assigne l'email
-            $this->accessLevel = $results['Rank_Level']; // Assigne le niveau d'accès
+            $this->username = $results['username']; // Assigne le nom d'utilisateur
+            $this->email = $results['email']; // Assigne l'email
+            $this->accessLevel = $results['rank_level']; // Assigne le niveau d'accès
             $this->initialized = true; // Marque l'utilisateur comme initialisé
 
             try {
                 // Convertit la date d'inscription en objet DateTime
-                $this->dateRegistered = new DateTime($results['Date_Registration']);
+                $this->dateRegistered = new DateTime($results['date_registration']);
             } catch (Exception) {
                 $this->dateRegistered = null; // Si erreur, met la date à null
             }
         }
     }
-
+    
     /** END REGION **/
 
     /** REGION SETTERS **/
@@ -68,10 +68,10 @@ class User {
         if (!self::$DB->getConnection()) return false; // Vérifie que la connexion est active
 
         // Requête SQL de mise à jour
-        $query = "UPDATE `Users` SET Username = :username WHERE ID_User = :id_user;";
+        $query = "UPDATE `users` SET username = :username WHERE id = :id;";
         $args = [
             ':username' => [$newUsername, PDO::PARAM_STR], // Paramètre sécurisé pour le nouveau nom
-            ':id_user' => [$this->id, PDO::PARAM_INT] // Paramètre sécurisé pour l'ID utilisateur
+            ':id' => [$this->id, PDO::PARAM_INT] // Paramètre sécurisé pour l'ID utilisateur
         ];
 
         // Exécute la requête et met à jour l'attribut local en cas de succès
@@ -89,10 +89,10 @@ class User {
         if (!self::$DB->getConnection()) return false; // Vérifie que la connexion est active
 
         // Requête SQL de mise à jour
-        $query = "UPDATE `Users` SET Email = :email WHERE ID_User = :id_user;";
+        $query = "UPDATE `users` SET email = :email WHERE id = :id;";
         $args = [
             ':email' => [$newEmail, PDO::PARAM_STR], // Paramètre sécurisé pour le nouvel email
-            ':id_user' => [$this->id, PDO::PARAM_INT] // Paramètre sécurisé pour l'ID utilisateur
+            ':id' => [$this->id, PDO::PARAM_INT] // Paramètre sécurisé pour l'ID utilisateur
         ];
 
         // Exécute la requête et met à jour l'attribut local en cas de succès
@@ -109,18 +109,18 @@ class User {
     public function setPassword(string $oldPassword, string $newPassword): bool {
         if (!self::$DB->getConnection()) return false; // Vérifie que la connexion est active
 
-        // Récupère le mot de passe actuel depuis la base
-        $query = "SELECT Password FROM `Users` WHERE ID_User = :id_user;";
-        $args = [':id_user' => [$this->id, PDO::PARAM_INT]];
+        // Récupère mdp actuel depuis bdd
+        $query = "SELECT password FROM `users` WHERE id = :id";
+        $args = [':id' => [$this->id, PDO::PARAM_INT]];
         $result = self::$DB->readOne($query, $args, PDO::FETCH_NUM);
 
         // Vérifie si l'ancien mot de passe est correct
         if ($result && password_verify($oldPassword, $result[0])) {
             // Hashe le nouveau mot de passe
-            $query = "UPDATE `Users` SET Password = :password WHERE ID_User = :id_user;";
+            $query = "UPDATE `users` SET password = :password WHERE id = :id;";
             $args = [
                 ':password' => [password_hash($newPassword, PASSWORD_ARGON2ID), PDO::PARAM_STR],
-                ':id_user' => [$this->id, PDO::PARAM_INT]
+                ':id' => [$this->id, PDO::PARAM_INT]
             ];
 
             return self::$DB->update($query, $args);
@@ -135,15 +135,13 @@ class User {
     /**
      * Récupère les informations de l'utilisateur depuis la base.
      */
-    private function getUserData(): array {
+    private function getUserData(): array|bool  {
         // Requête SQL avec jointure pour récupérer les infos utilisateur + accès
-        $query = "
-            SELECT `Users`.Username, `Users`.Email, `Users`.Date_Registration, `Access`.Rank_Level
-            FROM `Users`
-            INNER JOIN `Access` ON `Users`.ID_User = `Access`.ID_User
-            WHERE `Users`.ID_User = :id_user;
+        $query = "SELECT * FROM `users`
+            INNER JOIN `access` ON `users`.id= `access`.id_user
+            WHERE `users`.id = :id
         ";
-        $args = [':id_user' => [$this->id, PDO::PARAM_INT]]; // Paramètre sécurisé
+        $args = [':id' => [$this->id, PDO::PARAM_INT]]; // Paramètre sécurisé
         return self::$DB->readOne($query, $args); // Exécute la requête et retourne les résultats
     }
 

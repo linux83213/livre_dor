@@ -17,8 +17,8 @@
 class Database {
     private string $hostname;   // Adresse du serveur de base de données
     private string $dbName;     // Nom de la base de données
-    private string $username;   // Nom d'utilisateur pour la connexion
-    private string $password;   // Mot de passe pour la connexion
+    private string $username;   
+    private string $password;   
 
     private ?object $connection = null; // Instance PDO pour la connexion
     protected ?object $cursor = null;   // Curseur pour stocker le résultat des requêtes
@@ -116,10 +116,9 @@ class Database {
      * Établit une connexion à la base de données avec PDO.
      */
     public function connect(): void {
-        if ($this->getConnection()) {
+        if (!$this->isConnected()) {
             try {
-                $this->connection = new PDO(
-                    "mysql:host={$this->hostname};dbname={$this->dbName};charset=utf8",
+                $this->connection = new PDO("mysql:host={$this->hostname};dbname={$this->dbName};charset=utf8",
                     $this->username, $this->password,
                     [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -206,12 +205,17 @@ class Database {
 
     /** REGION GETTERS **/
 
-    /**
-     * Vérifie et active la connexion si nécessaire.
+    /*
+     * Vérifie et retourne l'objet de connexion PDO, tente de se connecter si nécessaire.
+     * @return PDO|false L'objet PDO de connexion si valide ou false en cas d'échec
      */
-    public function getConnection(): bool {
-        $this->connect();
-        return $this->isConnected();
+    public function getConnection(): bool|PDO {
+        if (!$this->isConnected()) {
+            $this->connect();
+        }
+        
+        // Retourne l'objet de connexion ou false si la connexion a échoué
+        return $this->isConnected() ? $this->connection : false;
     }
 
     /**

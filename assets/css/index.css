@@ -4,30 +4,33 @@ body {
     font-family: 'Arial', sans-serif;
     color: #6d5826;
     text-align: center;
-    }
-
-.container {
-    margin: 50px auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 100vh;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #a4895e;
+.container {
+    margin-inline: auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.container-text{
+    text-align: center;
+    margin: 1em auto;
+    padding: 2em;
+    border-radius: 10px;
+    width: 80%;
+    box-shadow: 0px 2px 8px 3px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    font-size: 20px;
-    font-weight: bold;
+    margin: 0;
     text-transform: uppercase;
     color: #a4895e;
 }
 
-input {
+input[type="text"],
+input[type="email"], 
+input[type="password"],
+textarea {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
@@ -37,9 +40,9 @@ input {
     color: #6d5826;
 }
 
-button {
-    width: 100%;
-    padding: 10px;
+input[type="submit"], .leave-message {
+    padding: .7em 3em;
+    margin: 1em;
     background-color: #a4895e;
     color: white;
     font-size: 16px;
@@ -49,7 +52,11 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.leave-message:hover {
+    text-decoration: none;
+}
+
+input[type="submit"]:hover, .leave-message:hover {
     background-color: #8a6f47;
 }
 
@@ -62,12 +69,33 @@ a:hover {
     text-decoration: underline;
 }
 
+ul{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    list-style-type: none;
+}
+
 header{
     background-color: darkolivegreen;
 }
 
 .nav-bar{
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding-inline: 1em;
+    position: relative;
+}
+
+.nav-bar .logo{
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);    
 }
 
 .nav-bar ul{
@@ -78,8 +106,101 @@ header{
 
 footer{
     background-color: darkolivegreen;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a4895e;
 }
 
 .copyright{
     margin: 0;
+}
+
+/*********** PAGE D'INSCRIPTION ************/
+.register-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#register-form{
+    padding: 2em 6em;
+    margin-bottom: 2.25em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px 3px rgba(0, 0, 0, 0.1);
+}
+
+#register-form button{
+    margin-top: 1.7em;
+}
+
+/*********** PAGE DE CONNEXION ************/
+.login-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#login-form{
+    padding: 2em 6em;
+    margin-bottom: 2.25em;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px 3px rgba(0, 0, 0, 0.1);
+}
+
+#login-form button{
+    margin-top: 1.7em;
+}
+
+/*********** PAGE AJOUT DE COMMENTAIRES ************/
+.comment-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.comment-section h1{
+    margin-bottom: 1.5em;
+}
+
+#comment-form{
+    padding: 2em 6em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px 3px rgba(0, 0, 0, 0.1);
+}
+
+#comment-form button{
+    margin-top: 1.7em;
+}
+
+/*********** PAGE DE LIVRE D'OR ************/
+.book-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.comments{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+.comment{
+    margin: 1em auto;
+    padding: 1em;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px 3px rgba(0, 0, 0, 0.1);
 }

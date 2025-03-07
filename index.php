@@ -1,14 +1,8 @@
-<?php
-/*
-if (isset($_GET['page']) && $_GET['page'] == 'inscription') {
-    include 'files/inscription.php';
-} elseif (isset($_GET['page']) && $_GET['page'] == 'connexion') {
-    include 'files/connexion.php';
-}
-    */
+<?php require './config/config.php';
+
+$isLoggedIn = isset($_SESSION['user_id']);
+
 ?>
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -20,26 +14,77 @@ if (isset($_GET['page']) && $_GET['page'] == 'inscription') {
 <body>
     <header>
         <nav class="nav-bar">
-            <img src="./assets/image/logo.png" alt="Logo du Livre d'or">
+            <a href="index.php" class="nav-link">
+                <img src="./assets/images/logo.png" alt="logo" class="logo">
+            </a>
             <ul>
-                <li><a href="index.php"></a></li>
-                <li><a href="livre_dor.php">Voir les messages</a></li>
-                <li><a href="./commentaires.php">Ajouter un message</a></li>
-                <li><a href="./files/register.php?page=register.php">S'inscrire</a></li>
-                <li><a href="login.php?page=./files/login.php">Se connecter</a></li>
+                <?php if ($isLoggedIn): ?>
+                    <!-- Éléments de navigation pour les utilisateurs connectés -->
+                    <li><a href="index.php?page=livre-or">Voir les messages</a></li>
+                    <li><a href="index.php?page=commentaires">Ajouter un message</a></li>
+                    <li><a href="index.php?page=profil">Mon profil</a></li>
+                    <li><a href="index.php?page=logout">Déconnexion</a></li>
+                <?php else: ?>
+                    <!-- Éléments de navigation pour les utilisateurs non connectés -->
+                    <li><a href="index.php?page=livre-or">Voir les messages</a></li>
+                    <li><a href="index.php?page=register">S'inscrire</a></li>
+                    <li><a href="index.php?page=login">Se connecter</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>
     <main>
         <section class="container">
-            <h1>Bienvenue sur notre Livre d'or</h1>
-            <h2>Partagez vos impressions</h2>
-            <p>Bienvenue sur notre livre d'or, un espace où vous pouvez laisser vos messages et lire les témoignages des autres visiteurs.</p>
-            <a href="ajouter_message.php" class="btn">Laisser un message</a>
+            <?php
+                function loadPage($page = null) {
+                    require BASE_PATH . '/files/' . $page . '.php';
+                    }
+                    if (!defined('BASE_PATH')) {
+                        define('BASE_PATH', __DIR__);
+                    }
+                
+                    // Initialiser Navigation
+                    $Navigation = new Navigation($page ?:'page', 'files', 'home');
+                    
+                    // Obtenir le chemin du fichier principal
+                    $filename = $Navigation->getMainFilePath();
+                    
+                    // Vérifier si le fichier existe
+                    if (file_exists($filename)) {
+                        require $filename;
+                    } else {
+                        // Essayer de trouver le fichier dans les sous-dossiers
+                        $alternatePaths = [
+                            BASE_PATH . '/files/' . $Navigation->getPage() . '.php',
+                
+                        ];
+                    
+                    $fileFound = false;
+                    foreach ($alternatePaths as $path) {
+                        if (file_exists($path)) {
+                            require $path;
+                            $fileFound = true;
+                            break;
+                        }
+                    }
+                    
+                    // Si aucun fichier n'est trouvé, charger la page par défaut
+                    if (!$fileFound) {
+                        require BASE_PATH . '/files/home.php';
+                        // Optionnellement, enregistrer l'erreur dans un journal
+                        error_log("Page non trouvée: " . $Navigation->getPage());
+                    }
+                }
+            ?>
         </section>
     </main>
-    <footer>
-        <p class="copyright">&copy; 2025 Livre d'or - Tous droits réservés.</p>
+    <footer class="footer">
+        <ul>
+            <li>©Livre d'or</li>
+            <li>Mentions légales</li>
+            <li>Politique de confidentialité</li>
+            <li>Contact</li>
+        </ul>
     </footer>
 </body> 
 </html>
