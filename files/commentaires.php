@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form action="" method="post" id="comment-form">
                 <label for="comment">Message :</label>
                 <textarea id="comment" name="comment" required></textarea>
-                <input type="submit">Envoyer</input>
+                <input type="submit">
             </form>
         </section>
     </main>

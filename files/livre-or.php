@@ -6,15 +6,43 @@
     // Crée instance de Database
     $db = new Database('localhost', 'livre_or', 'root', '');
 
-    // Requête pour récupérer les commentaires avec l'ID de l'utilisateur
-    // Ajout d'un ORDER BY pour trier par date décroissante
-    $sql = "SELECT comments.id  AS comment_id, comments.comment, comments.date, comments.user_id, 
-        users.id AS user_id, users.username
-        FROM comments
-        INNER JOIN users ON comments.user_id = users.id
-        ORDER BY comments.date DESC";
-    $comments = $db->readAll($sql, []); // Récupère tous les commentaires
-
+    // Vérifier si une recherche a été effectuée
+    $search = isset($_POST['search']) ? $_POST['search'] : '';
+    $whereConditions = [];
+    $params = [];
+    
+    if ($search) {
+        // Décompose le mot de recherche en lettres individuelles
+        $letters = str_split($search);
+    
+        // Créer des conditions LIKE pour chaque lettre
+        foreach ($letters as $letter) {
+            $whereConditions[] = "comments.comment LIKE ?";
+            $params[] = "%" . $letter . "%";
+        }
+    
+        // Rejoindre les conditions avec "OR" pour que l'une ou l'autre lettre soit présente
+        $whereSql = implode(" OR ", $whereConditions);
+    
+        // Construire la requête SQL avec la condition dynamique
+        $sql = "SELECT comments.id AS comment_id, comments.comment, comments.date, comments.user_id, 
+                users.id AS user_id, users.username
+                FROM comments
+                INNER JOIN users ON comments.user_id = users.id
+                WHERE " . htmlspecialchars($whereSql) . "
+                ORDER BY comments.date DESC";
+    
+        // Exécuter la requête avec les paramètres
+        $comments = $db->readAll($sql, $params);
+    } else {
+        // Si aucune recherche, récupérer tous les commentaires
+        $sql = "SELECT comments.id AS comment_id, comments.comment, comments.date, comments.user_id, 
+                users.id AS user_id, users.username
+                FROM comments
+                INNER JOIN users ON comments.user_id = users.id
+                ORDER BY comments.date DESC";
+        $comments = $db->readAll($sql, []);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +57,10 @@
     <section class="book-container">
         <h2>Tous les commentaires des utilisateurs</h2>
         <div class="comments">
+            <form action="" method="post" id="search-form">
+                <input type="search" name="search" id="search" placeholder="Rechercher un commentaire">
+                <input type="submit" id="search-btn" value="Rechercher">
+            </form>
             <?php
                 // Affiche chaque commentaire et les informations associées
                 if (is_array($comments) && count($comments) > 0) {

@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($password, $userData['password'])) {
             session_regenerate_id();
             $_SESSION['user_id'] = $userData['id'];
-            header('Location: ' . BASE_PATH . '/files/profil.php');
+            header('Location: ./profil.php');
             exit();
         } else {
             $message = 'Mauvais identifiants';
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/css/index.css">
+    <link rel="stylesheet" href="/assets/css/index.css">
     <title>Connexion</title>
 </head>
 <body>
@@ -52,12 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php if (!empty($message)): ?>
                 <p><?= htmlspecialchars($message) ?></p>
             <?php endif; ?>
-            <form action="profil.php" method="post" id="login-form">
+            <form action="" method="post" id="login-form">
                 <img src="./assets/images/logo.png" alt="logo" class="logo-form">
                 <label for="username">Nom d'utilisateur:</label>
-                <input type="text" id="username" name="username">
+                <input type="text" id="username" name="username" required>
                 <label for="password">Mot de passe:</label>
-                <input type="password" id="password" name="password">
+                <input type="password" id="password" name="password" required>
                 <input type="submit" name="submit" value="Se connecter">
             </form>
         </section>

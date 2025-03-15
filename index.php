@@ -1,8 +1,19 @@
-<?php require './config/config.php';
+<?php 
+require_once './config/config.php';
 
 $isLoggedIn = isset($_SESSION['user_id']);
 
+// Déterminer la page à afficher
+$page = isset($_GET['page']) ? $_GET['page'] : 'home';
+$filePath = __DIR__ . '/files/' . $page . '.php';
+
+// Vérifier si le fichier existe, sinon charger la page d'accueil
+if (!file_exists($filePath)) {
+    $filePath = __DIR__ . '/files/home.php';
+}
+
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -35,46 +46,9 @@ $isLoggedIn = isset($_SESSION['user_id']);
     </header>
     <main>
         <section class="container">
-            <?php
-                function loadPage($page = null) {
-                    require BASE_PATH . '/files/' . $page . '.php';
-                    }
-                    if (!defined('BASE_PATH')) {
-                        define('BASE_PATH', __DIR__);
-                    }
-                
-                    // Initialiser Navigation
-                    $Navigation = new Navigation($page ?:'page', 'files', 'home');
-                    
-                    // Obtenir le chemin du fichier principal
-                    $filename = $Navigation->getMainFilePath();
-                    
-                    // Vérifier si le fichier existe
-                    if (file_exists($filename)) {
-                        require $filename;
-                    } else {
-                        // Essayer de trouver le fichier dans les sous-dossiers
-                        $alternatePaths = [
-                            BASE_PATH . '/files/' . $Navigation->getPage() . '.php',
-                
-                        ];
-                    
-                    $fileFound = false;
-                    foreach ($alternatePaths as $path) {
-                        if (file_exists($path)) {
-                            require $path;
-                            $fileFound = true;
-                            break;
-                        }
-                    }
-                    
-                    // Si aucun fichier n'est trouvé, charger la page par défaut
-                    if (!$fileFound) {
-                        require BASE_PATH . '/files/home.php';
-                        // Optionnellement, enregistrer l'erreur dans un journal
-                        error_log("Page non trouvée: " . $Navigation->getPage());
-                    }
-                }
+            <?php 
+                // Inclure la page à afficher
+                include $filePath;
             ?>
         </section>
     </main>
