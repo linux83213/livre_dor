@@ -11,7 +11,7 @@
             nous vous encourageons à nous en faire part.<br>
             C'est un espace où vous pouvez laisser vos messages et lire les témoignages des autres visiteurs.</br>
             Nous vous remercions pour votre participation et votre confiance.</br></br>
-        <p>
+        </p>
     </div>
-    <a href="./files/commentaires.php?page=commentaires" class="leave-message">Laisser un message</a>
+    <a href="index.php?page=commentaires" class="leave-message">Laisser un message</a>
 </article>

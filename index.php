@@ -4,13 +4,7 @@ require_once './config/config.php';
 $isLoggedIn = isset($_SESSION['user_id']);
 
 // Déterminer la page à afficher
-$page = isset($_GET['page']) ? $_GET['page'] : 'home';
-$filePath = __DIR__ . '/files/' . $page . '.php';
-
-// Vérifier si le fichier existe, sinon charger la page d'accueil
-if (!file_exists($filePath)) {
-    $filePath = __DIR__ . '/files/home.php';
-}
+$fileName = isset($_GET['page']) ? $_GET['page'] : NULL;
 
 ?>
 
@@ -20,7 +14,7 @@ if (!file_exists($filePath)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Livre d'or</title>
-    <link rel="stylesheet" href="./assets/css/index.css">
+    <link rel='stylesheet' href='./assets/css/index.css'>
 </head>
 <body>
     <header>
@@ -48,7 +42,11 @@ if (!file_exists($filePath)) {
         <section class="container">
             <?php 
                 // Inclure la page à afficher
-                include $filePath;
+                if ($fileName && file_exists("./files/$fileName.php")){
+                    include("./files/$fileName.php");
+                } else {
+                    include("./files/home.php");
+                }
             ?>
         </section>
     </main>

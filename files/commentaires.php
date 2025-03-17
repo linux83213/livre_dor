@@ -1,10 +1,10 @@
 <?php
 
-require_once('./classes/Database.php');
+require_once __DIR__ . '/../classes/Database.php';
 
 // Vérifie si l'utilisateur est connecté, sinon redirige vers la page de connexion
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: index.php?page=login");
     exit();
 } 
 
@@ -63,30 +63,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commentaires</title>
-    <link rel="stylesheet" href="../assets/css/index.css">
-</head>
-<body>
-    <main>
-        <section class="comment-section">
-            <h2>Bonjour, <?= htmlspecialchars($username); ?>!</h2>
-            <h3>Ajouter un commentaire</h3>
 
-            <?php if ($message): ?>
-                <p><?= htmlspecialchars($message); ?></p>
-            <?php endif; ?>
+<section class="comment-section">
+    <h2>Bonjour, <?= htmlspecialchars($username); ?>!</h2>
+    <h3>Ajouter un commentaire</h3>
 
-            <form action="" method="post" id="comment-form">
-                <label for="comment">Message :</label>
-                <textarea id="comment" name="comment" required></textarea>
-                <input type="submit">
-            </form>
-        </section>
-    </main>
-</body>
-</html>
+    <?php if ($message): ?>
+        <p><?= htmlspecialchars($message); ?></p>
+    <?php endif; ?>
+
+    <form action="" method="post" id="comment-form">
+        <label for="comment">Message :</label>
+        <textarea id="comment" name="comment" required></textarea>
+        <input type="submit">
+    </form>
+</section>
+

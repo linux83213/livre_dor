@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             if ($db->create($query, $args)) {
                 // Redirige vers la page de connexion si l'inscription est réussie
                 $message = 'Inscription réussie!';
-                header('Location: ./files/login.php');
+                header('Location: index.php?page=login');
                 exit();
             } else {
                 $message = 'Erreur lors de l\'inscription, veuillez réessayer.';
@@ -56,67 +56,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="./assets/css/index.css">
-    <title>Inscription</title>
-</head>
-<body>
-    <main>
-        <section class="register-container">
-            <h2>S'inscrire</h2>
-            <?php if (!empty($message)) : ?>
-                <p><?= htmlspecialchars($message); ?></p>
-            <?php endif; ?>
-            <form method=POST action="" id="register-form">
-                <img src="./assets/images/logo.png" alt="logo" class="logo">
-                <label for="username">Nom d'utilisateur</label>
-                <input 
-                    type="text" 
-                    id="username" 
-                    name="username" 
-                    placeholder="Entrez votre nom d'utilisateur"
-                    required
-                /></br>
-                <label for="email">Adresse mail</label>
-                <input
-                    type=email
-                    id="email" 
-                    name="email" 
-                    placeholder="Entrez votre adresse mail"
-                    required
-                /></br>
-                <label for="password">Mot de passe</label>
-                <input
-                    type=password
-                    id="password" 
-                    name="password" 
-                    placeholder="Entrez votre mot de passe"
-                    required
-                /></br>
-                <input 
-                    type="submit" 
-                    name="submit" 
-                    value="S'inscrire" 
-                    class="register-button" 
-                />
-                <p class="box-register">
-                    Déjà inscrit ? 
-                    <a href="./files/login.php?page=login">Connectez-vous ici</a>
-                </p>
-                <p class="terms-of-use">
-                    En créant un compte, vous acceptez nos Conditions d'utilisation. <br>
-                    Découvrez comment nous traitons vos données dans <u>notre Politique de confidentialité.</u>
-                </p>
-            </form>
-        </section>
-    </main>
-</body>
-</html>
+
+<section class="register-container">
+    <h2>S'inscrire</h2>
+    <?php if (!empty($message)) : ?>
+        <p><?= htmlspecialchars($message); ?></p>
+    <?php endif; ?>
+    <form method=POST action="" id="register-form">
+        <img src="./assets/images/logo.png" alt="logo" class="logo">
+        <label for="username">Nom d'utilisateur</label>
+        <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            placeholder="Entrez votre nom d'utilisateur"
+            required
+        /></br>
+        <label for="email">Adresse mail</label>
+        <input
+            type=email
+            id="email" 
+            name="email" 
+            placeholder="Entrez votre adresse mail"
+            required
+        /></br>
+        <label for="password">Mot de passe</label>
+        <input
+            type=password
+            id="password" 
+            name="password" 
+            placeholder="Entrez votre mot de passe"
+            required
+        /></br>
+        <input 
+            type="submit" 
+            name="submit" 
+            value="S'inscrire" 
+            class="register-button" 
+        />
+        <p class="box-register">
+            Déjà inscrit ? 
+            <a href="index.php?page=login">Connectez-vous ici</a>
+        </p>
+        <p class="terms-of-use">
+            En créant un compte, vous acceptez nos Conditions d'utilisation. <br>
+            Découvrez comment nous traitons vos données dans <u>notre Politique de confidentialité.</u>
+        </p>
+    </form>
+</section>
