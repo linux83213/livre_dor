@@ -22,7 +22,7 @@
     }
 
     // Nombre de commentaires par page
-    $commentairesParPage = 3;
+    $commentairesParPage = 5;
 
     // Récupération de la page actuelle
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -41,8 +41,8 @@
     // Récupération des commentaires avec pagination
     $commentaires = $db->readAll(
         "SELECT * FROM comments ORDER BY date DESC LIMIT ?, ?", 
-        [$offset, $commentairesParPage]
-);
+        [$offset, $commentairesParPage] 
+    );
 
 ?>
 

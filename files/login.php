@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($password, $userData['password'])) {
             session_regenerate_id();
             $_SESSION['user_id'] = $userData['id'];
-            header('Location: index.php?page=profil');
+            header('Location: index.php');
             exit();
         } else {
             $message = 'Mauvais identifiants';
