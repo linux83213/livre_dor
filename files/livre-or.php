@@ -25,7 +25,7 @@
     $commentairesParPage = 5;
 
     // Récupération de la page actuelle
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $page = isset($_GET['p']) ? (int)$_GET['p'] : 1;
     if ($page < 1) $page = 1;
 
     // Calcul de l'offset
@@ -40,8 +40,11 @@
 
     // Récupération des commentaires avec pagination
     $commentaires = $db->readAll(
-        "SELECT * FROM comments ORDER BY date DESC LIMIT ?, ?", 
-        [$offset, $commentairesParPage] 
+        "SELECT * FROM comments ORDER BY date DESC LIMIT :offset, :limit", 
+        [
+            ':offset' => [$offset, PDO::PARAM_INT],
+            ':limit' => [$commentairesParPage, PDO::PARAM_INT]
+        ]
     );
 
 ?>
@@ -81,15 +84,15 @@
     <!-- Liens de pagination -->
     <div class="pagination">
     <?php if ($page > 1): ?>
-        <a href="livre-or.php?page=<?= $page - 1 ?>">⬅️ Précédent</a>
+        <a href="index.php?page=livre-or&p=<?= $page - 1 ?>">⬅️ Précédent</a>
     <?php endif; ?>
 
     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-        <a href="livre-or.php?page=<?= $i ?>" <?= ($i === $page) ? 'style="font-weight:bold;"' : '' ?>><?= $i ?></a>
+        <a href="index.php?page=livre-or&p=<?= $i ?>" <?= ($i === $page) ? 'style="font-weight:bold;"' : '' ?>><?= $i ?></a>
     <?php endfor; ?>
 
     <?php if ($page < $totalPages): ?>
-        <a href="livre-or.php?page=<?= $page + 1 ?>">Suivant ➡️</a>
+        <a href="index.php?page=livre-or&p=<?= $page + 1 ?>">Suivant ➡️</a>
     <?php endif; ?>
 </div>
 </section>

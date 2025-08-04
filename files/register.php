@@ -1,6 +1,6 @@
 <?php
 
-require_once('classes/Database.php');
+require_once __DIR__ . '/../classes/Database.php';
 
 $db = new Database('localhost', 'livre_or', 'root', '');
 
