@@ -177,7 +177,7 @@ class User {
      * Retourne la date d'inscription formatée.
      */
     public function getDateRegistered(string $format = 'd/m/Y'): string {
-        return $this->dateRegistered->format($format);
+        return $this->dateRegistered ? $this->dateRegistered->format($format) : 'Date inconnue';
     }
 
     /**

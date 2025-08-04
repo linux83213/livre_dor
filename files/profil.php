@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
      // Redirection avec un message
-    header('Location: profil.php');
+    header('Location: index.php?page=profil');
     exit;
 }
 
